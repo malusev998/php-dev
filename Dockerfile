@@ -38,7 +38,8 @@ COPY --from=cassandra-build /usr/local/lib/php/extensions/no-debug-non-zts-20200
 COPY --from=mlocati/php-extension-installer /usr/bin/install-php-extensions /usr/local/bin/
 
 # Install Core Extensions
-RUN ln -s /usr/local/lib/libcassandra.so.2.15.1 /usr/local/lib/libcassandra.so \
+RUN groupadd -g 101 nginx && useradd -m -s /bin/bash -u 101 -g 101 nginx && \
+    ln -s /usr/local/lib/libcassandra.so.2.15.1 /usr/local/lib/libcassandra.so \
     && apt-get update && apt-get install -y \
     git \
     libuv1-dev \
@@ -74,3 +75,4 @@ COPY ./conf.d/docker-php-ext-igbinary.ini /usr/local/etc/php/conf.d/docker-php-e
 COPY ./conf.d/docker-php-ext-redis.ini /usr/local/etc/php/conf.d/docker-php-ext-redis.ini
 COPY ./conf.d/docker-php-ext-xdebug.ini /usr/local/etc/php/conf.d/docker-php-ext-xdebug.ini
 COPY ./conf.d/docker-php-ext-cassandra.ini /usr/local/etc/php/conf.d/docker-php-ext-cassandra.ini
+COPY ./www.conf /usr/local/etc/php-fpm.d/www.conf
